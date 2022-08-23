@@ -1,7 +1,11 @@
 # Spark_Challenge
 
-Spark/Scala Challenge for interview purposes
+## Spark 2 Challenge
 
+### Language
+Scala
+
+### About Me
 - Filipe Batista
 - fbat_@outlook.com
 - github.com/bat-0
