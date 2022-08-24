@@ -1,7 +1,12 @@
+import com.carrotsearch.hppc.Intrinsics.cast
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.catalyst.dsl.expressions.StringToAttributeConversionHelper
+import org.apache.spark.sql.functions.isnan
 
-object Part2 {
+import java.sql.Date
+
+object Part2v2 {
 
   case class Application(
                           App: String,
@@ -54,13 +59,8 @@ object Part2 {
     import org.apache.spark.sql.functions._
     val df_2 = df_filtered.orderBy(desc("Rating"))
 
-    //df_2.show()
+    df_2.show()
 
-    //save as unique csv  ('coalesce' has better performance & uses less resources than 'repartition')
-    //maintaining the header line and setting the delimiter to '§'
-    df_2.coalesce(1).write.option("header", true).option("delimiter","§").csv("output/best_apps")
-
-    //stop the spark session
     spark.stop()
   }
 }

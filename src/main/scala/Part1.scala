@@ -18,7 +18,6 @@ object Part1 {
 
     //using the header provided in the csv to replicate the schema used
     val UserReviews = spark.read
-      .option("null", 0)
       .option("header", "true")
       .option("inferSchema", "true")
       .csv("input/googleplaystore_user_reviews.csv")
@@ -37,10 +36,6 @@ object Part1 {
 
     //show dataframe
     df_1.show()
-
-    //save as csv
-    //df_1.write.option("header" -> true, "delimiter"->"§").format("com.databricks.spark.csv").save("output/df_1.csv")
-
 
     //stopping the spark session
     spark.stop()
