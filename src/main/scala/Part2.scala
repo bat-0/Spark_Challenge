@@ -30,7 +30,7 @@ object Part2 {
       .master("local")
       .getOrCreate()
 
-    //to cast string => double
+    //to force cast string => double
     import org.apache.spark.sql.Encoders
     val schema = Encoders.product[Application].schema
 
