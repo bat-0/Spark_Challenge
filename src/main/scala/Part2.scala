@@ -1,6 +1,8 @@
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 
+import scala.util.control.Exception
+
 object Part2 {
 
   case class Application(
@@ -40,9 +42,6 @@ object Part2 {
       .schema(schema)
       .csv("input/googleplaystore.csv")
 
-    //temporary view named "applications"
-    Applications.createOrReplaceTempView("applications")
-    Applications.printSchema()
 
     //filter applications by Ratings >= 4.0
     val df_4rating = Applications.filter(Applications("Rating")>=4.0)
@@ -56,9 +55,20 @@ object Part2 {
 
     //df_2.show()
 
+    val path = "output/best_apps"
     //save as unique csv  ('coalesce' has better performance & uses less resources than 'repartition')
     //maintaining the header line and setting the delimiter to '§'
-    df_2.coalesce(1).write.option("header", value = true).option("delimiter","§").csv("output/best_apps")
+    try{
+      df_2.coalesce(1).write
+        .option("header", value = true)
+        .option("delimiter","§")
+        .mode("overwrite")
+        .csv(path)
+
+      println("File saved successfully at: " + path)
+    }catch {
+      case e: Exception => println(Exception)
+    }
 
     //stop the spark session
     spark.stop()

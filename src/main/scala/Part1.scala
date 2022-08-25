@@ -35,7 +35,7 @@ object Part1 {
     when(if ($"Average_Sentiment_Polarity".isNotNull), col("Average_Sentiment_Polarity") = 0))
     */
 
-    //show dataframe
+    df_1.printSchema()
     df_1.show()
 
     //stopping the spark session
