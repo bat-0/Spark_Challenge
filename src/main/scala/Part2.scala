@@ -58,7 +58,7 @@ object Part2 {
 
     //save as unique csv  ('coalesce' has better performance & uses less resources than 'repartition')
     //maintaining the header line and setting the delimiter to '§'
-    df_2.coalesce(1).write.option("header", true).option("delimiter","§").csv("output/best_apps")
+    df_2.coalesce(1).write.option("header", value = true).option("delimiter","§").csv("output/best_apps")
 
     //stop the spark session
     spark.stop()

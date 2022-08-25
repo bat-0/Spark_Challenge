@@ -1,7 +1,5 @@
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.sql._
-//import org.apache.spark.sql.functions.col
-//import org.apache.spark.sql.functions.regexp_replace
+import org.apache.spark.sql.SparkSession
 
 object Part1 {
 
@@ -32,7 +30,10 @@ object Part1 {
     val df_1 = df_avg.withColumnRenamed("avg(CAST(Sentiment_Polarity AS DOUBLE))", "Average_Sentiment_Polarity")
 
     //remove null values after calculation and set them to zero
-    //val df_1_noNulls = df_1.withColumn("Average_Sentiment_Polarity", regexp_replace(col("Average_Sentiment_Polarity"), null, 0.0)
+    /*
+    val df_1_noNulls = df_1.withColumn("Average_Sentiment_Polarity",
+    when(if ($"Average_Sentiment_Polarity".isNotNull), col("Average_Sentiment_Polarity") = 0))
+    */
 
     //show dataframe
     df_1.show()

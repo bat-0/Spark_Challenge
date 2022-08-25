@@ -1,8 +1,7 @@
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.sql.{Column, DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{col, regexp_replace, to_timestamp, udf}
-import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.types.{BooleanType, DateType, DoubleType, LongType, StringType, StructType}
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.{col, expr, regexp_replace, to_timestamp}
+import org.apache.spark.sql.types.{DoubleType, LongType}
 
 
 
@@ -83,19 +82,29 @@ object Part3 {
     val df_dateTransformation3 = df_dateTransformation2.withColumn("LastUpdated",
       when($"LastUpdated".contains(","),regexp_replace($"LastUpdated", ",", ""))
     )
+
+    //converting the LastUpdated(string) column to DateType
     val df_stringToDateType = df_dateTransformation3.withColumn("LastUpdated", to_timestamp(col("LastUpdated"), "MM-dd-yyyy"))
 
+    //removing the $ sign out of the strings in the 'Price' column
+    val df_priceTransformation = df_stringToDateType.withColumn("Price",
+      when($"Price".contains("$"),
+      expr("substring(Price, 2, length(Price))")))
 
     //casting string columns to their respective types
     import org.apache.spark.sql.functions._
-    val df_typeChange = df_stringToDateType.withColumn("Size",col("Size").cast(DoubleType))
+    val df_typeChange = df_priceTransformation.withColumn("Size",col("Size").cast(DoubleType))
       .withColumn("Rating",col("Rating").cast(DoubleType))
-      .withColumn("Price",col("Price").cast(DoubleType))
+      //.withColumn("Price",col("Price").cast(DoubleType))
       .withColumn("Reviews", col("Reviews").cast(LongType))
 
 
     //converting the Price column from USD => EUR with 0.9 rate
-    val df_dollarToEur = df_typeChange.withColumn("Price",col("Price")* 0.9)
+    //leaving Free applications with a 'null' entry on the Price column
+    val df_dollarToEur = df_typeChange.withColumn("Price",
+      when($"Price".isNotNull,
+      round(col("Price") * lit(0.9),2)))
+
 
     //renaming columns
     val df_renamed = df_dollarToEur.withColumnRenamed("ContentRating", "Content_Rating")
@@ -108,6 +117,8 @@ object Part3 {
       .withColumn("Category", split(col("Category"), ";").cast("array<String>"))
 
     df_3.show(false)
+    df_3.printSchema()
 
+    spark.stop()
   }
 }
