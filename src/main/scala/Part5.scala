@@ -1,26 +1,12 @@
+import Part4.{Application, Review}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, expr, regexp_replace, to_timestamp}
 import org.apache.spark.sql.types.{DoubleType, LongType}
+import scala.util.control.Exception
 
 
 object Part5 {
-
-  case class Application(
-                          App: String,
-                          Category: String,
-                          Rating: String,
-                          Reviews: String,
-                          Size: String,
-                          Installs: String,
-                          Type: String,
-                          Price: String,
-                          ContentRating: String,
-                          Genres: String,
-                          LastUpdated: String,
-                          CurrentVer: String,
-                          AndroidVer: String
-                        )
 
   def main(args: Array[String]): Unit = {
     // logger settings
@@ -36,6 +22,32 @@ object Part5 {
     //to force type casting
     import org.apache.spark.sql.Encoders
     val appSchema = Encoders.product[Application].schema
+    val reviewSchema = Encoders.product[Review].schema
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    val Reviews = spark.read
+      .option("header", "true")
+      .schema(reviewSchema)
+      .csv("input/googleplaystore_user_reviews.csv")
+
+    //removed all non-entries (entire rows with nan/null values)
+    val df_removeNulls = Reviews.na.drop("all")
+    //new dataframe grouped by 'App' with the average rating given in 'Sentiment_Polarity'
+    val df_avg = df_removeNulls.groupBy("App").avg("Sentiment_Polarity")
+    //renamed column to 'Average_Sentiment_Polarity'
+    var df_1 = df_avg.withColumnRenamed("avg(Sentiment_Polarity)", "Average_Sentiment_Polarity")
+
+    //create temporary view
+    df_1.createOrReplaceTempView("reviews")
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //using the header provided in the csv to replicate the schema used
     val Applications = spark.read
@@ -101,7 +113,6 @@ object Part5 {
       when($"Price".isNotNull,
         round(col("Price") * lit(0.9),2)))
 
-
     //renaming columns
     val df_renamed = df_dollarToEur.withColumnRenamed("ContentRating", "Content_Rating")
       .withColumnRenamed("LastUpdated", "Last_Updated")
@@ -115,38 +126,34 @@ object Part5 {
     //temporary view named "applications"
     df_3.createOrReplaceTempView("applications")
 
-
-    //df_3.show(false)
-    //df_3.printSchema()
-
     //deconstructing the column 'Genres' from array to different rows
-    var df_4 = df_3.select($"App",explode($"Genres").alias("Genres"))
-
-    //removing NaN Rating rows
-    df_4 = spark.sql(
-      """
-        |SELECT *
-        |FROM applications
-        |WHERE Rating > 0
-        |""".stripMargin)
+    var df_4 = df_3.select($"*",explode($"Genres").alias("Genre"))
 
     //grouping by Genre, averaging the Rating score of those apps (rounded by 3 decimal places)
-    df_4 = spark.sql(
-      """
-        |SELECT Genres AS Genre, COUNT(App) AS Count, ROUND(AVG(Rating),3) AS Average_Rating
-        |FROM applications
-        |GROUP BY Genres
-        |""".stripMargin)
+    df_4 = df_4.select($"Genre",$"App",$"Rating")
 
-    df_4.show(false)
+    //renaming the App column in df_1 to avoid ambiguity
+    df_1 = df_1.withColumnRenamed("App", "App_df_1")
+
+    //joining both dataframes by "App"
+    df_4 = df_4.join(df_1,df_4("App") ===  df_1("App_df_1"),"inner")
+
+    //grouping the rows by Genre - creating a count() column for the number of apps per Genre
+    //calculating both averages for Rating & Sentiment Polarity
+    df_4 = df_4.groupBy("Genre")
+      .agg(count("App").as("Count"),
+        avg("Rating").as("Average_Rating"),
+        avg("Average_Sentiment_Polarity").as("Average_Sentiment_Polarity"))
+
+    df_4.show()
 
 
     val path = "output/googleplaystore_metrics"
     //saving the dataframe to a parquet file, using Gzip compression
     try{
       df_4.coalesce(1).write
-        .option("codec", "org.apache.hadoop.io.compress.GzipCodec")
-        //.option("compression", "gzip")
+        //.option("codec", "org.apache.hadoop.io.compress.GzipCodec")
+        .option("compression", "gzip")
         .mode("overwrite")
         .parquet(path)
 
@@ -154,5 +161,7 @@ object Part5 {
     }catch{
       case e: Exception => println(Exception)
     }
+
+    spark.stop()
   }
 }

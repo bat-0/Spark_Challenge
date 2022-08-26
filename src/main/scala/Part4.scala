@@ -168,8 +168,8 @@ object Part4 {
     //saving the dataframe to a parquet file, using Gzip compression
     try{
       df_join.coalesce(1).write
-        .option("codec", "org.apache.hadoop.io.compress.GzipCodec")
-        //.option("compression", "gzip")
+        //.option("codec", "org.apache.hadoop.io.compress.GzipCodec")
+        .option("compression", "gzip")
         .mode("overwrite")
         .parquet(path)
 
