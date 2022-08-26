@@ -3,7 +3,7 @@
 ### About this project
 - Spark 2 Recruitment Challenge
 
-### Language & Dependecies
+### Language & Dependencies
 - Scala (v. 2.12.8) 
 - Maven as dependency manager
 - Dependecies:  "org.apache.spark" %% "spark-sql" % "2.4.4"
