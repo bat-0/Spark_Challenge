@@ -2,19 +2,9 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, expr, regexp_replace, to_timestamp}
 import org.apache.spark.sql.types.{DoubleType, LongType}
-import scala.util.control.Exception
 
 
-object Part4 {
-
-  case class Review(
-                     App: String,
-                     Translated_Review: String,
-                     Sentiment: String,
-                     Sentiment_Polarity: Double,
-                     Sentiment_Subjectivity: Double,
-                   )
-
+object Part5 {
 
   case class Application(
                           App: String,
@@ -39,42 +29,13 @@ object Part4 {
     // SparkSession settings, running on 1 core with the name "Part3"
     val spark = SparkSession
       .builder
-      .appName("Part4")
+      .appName("Part5")
       .master("local")
       .getOrCreate()
 
     //to force type casting
     import org.apache.spark.sql.Encoders
     val appSchema = Encoders.product[Application].schema
-    val reviewSchema = Encoders.product[Review].schema
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    val Reviews = spark.read
-      .option("header", "true")
-      .schema(reviewSchema)
-      .csv("input/googleplaystore_user_reviews.csv")
-
-
-
-    //removed all non-entries (entire rows with nan/null values)
-    val df_removeNulls = Reviews.na.drop("all")
-    //new dataframe grouped by 'App' with the average rating given in 'Sentiment_Polarity'
-    val df_avg = df_removeNulls.groupBy("App").avg("Sentiment_Polarity")
-    //renamed column to 'Average_Sentiment_Polarity'
-    val df_1 = df_avg.withColumnRenamed("avg(Sentiment_Polarity)", "Average_Sentiment_Polarity")
-
-    //create temporary view
-    df_1.createOrReplaceTempView("reviews")
-
-    //df_1.printSchema()
-    //df_1.show()
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //using the header provided in the csv to replicate the schema used
     val Applications = spark.read
@@ -124,7 +85,7 @@ object Part4 {
     //removing the $ sign out of the strings in the 'Price' column
     val df_priceTransformation = df_stringToDateType.withColumn("Price",
       when($"Price".contains("$"),
-      expr("substring(Price, 2, length(Price))")))
+        expr("substring(Price, 2, length(Price))")))
 
     //casting string columns to their respective types
     import org.apache.spark.sql.functions._
@@ -138,7 +99,7 @@ object Part4 {
     //leaving Free applications with a 'null' entry on the Price column
     val df_dollarToEur = df_typeChange.withColumn("Price",
       when($"Price".isNotNull,
-      round(col("Price") * lit(0.9),2)))
+        round(col("Price") * lit(0.9),2)))
 
 
     //renaming columns
@@ -153,21 +114,37 @@ object Part4 {
 
     //temporary view named "applications"
     df_3.createOrReplaceTempView("applications")
+
+
     //df_3.show(false)
     //df_3.printSchema()
 
+    //deconstructing the column 'Genres' from array to different rows
+    var df_4 = df_3.select($"App",explode($"Genres").alias("Genres"))
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //removing NaN Rating rows
+    df_4 = spark.sql(
+      """
+        |SELECT *
+        |FROM applications
+        |WHERE Rating > 0
+        |""".stripMargin)
 
-    //using sql native syntax to write join operation on temporary tables from df_1 & df_3
-    val df_join = spark.sql("select * from applications left join reviews using(App)")
+    //grouping by Genre, averaging the Rating score of those apps (rounded by 3 decimal places)
+    df_4 = spark.sql(
+      """
+        |SELECT Genres AS Genre, COUNT(App) AS Count, ROUND(AVG(Rating),3) AS Average_Rating
+        |FROM applications
+        |GROUP BY Genres
+        |""".stripMargin)
 
-    val path = "output/googleplaystore_cleaned"
+    df_4.show(false)
+
+
+    val path = "output/googleplaystore_metrics"
     //saving the dataframe to a parquet file, using Gzip compression
     try{
-      df_join.coalesce(1).write
+      df_4.coalesce(1).write
         .option("codec", "org.apache.hadoop.io.compress.GzipCodec")
         //.option("compression", "gzip")
         .mode("overwrite")
@@ -177,8 +154,5 @@ object Part4 {
     }catch{
       case e: Exception => println(Exception)
     }
-
-    //terminate spark session
-    spark.stop()
   }
 }

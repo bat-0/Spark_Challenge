@@ -5,27 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04a1ce60-83c5-4b99-8f8c-f201c0e1579d" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/best_apps/._SUCCESS.crc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/best_apps/.part-00000-a57a1d13-6f4e-4277-a7b3-f011b2140e79-c000.csv.crc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/best_apps/_SUCCESS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/best_apps/part-00000-a57a1d13-6f4e-4277-a7b3-f011b2140e79-c000.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/googleplaystore_cleaned/._SUCCESS.crc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/googleplaystore_cleaned/.part-00000-9af550dc-363e-437d-a716-8a5318bee065-c000.snappy.parquet.crc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/googleplaystore_cleaned/_SUCCESS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/output/googleplaystore_cleaned/part-00000-9af550dc-363e-437d-a716-8a5318bee065-c000.snappy.parquet" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Part5.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Part1.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Part1.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/Part2.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Part2.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/best_apps/._SUCCESS.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/best_apps/.part-00000-a57a1d13-6f4e-4277-a7b3-f011b2140e79-c000.csv.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/best_apps/_SUCCESS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/best_apps/part-00000-a57a1d13-6f4e-4277-a7b3-f011b2140e79-c000.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/googleplaystore_cleaned/._SUCCESS.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/googleplaystore_cleaned/.part-00000-9af550dc-363e-437d-a716-8a5318bee065-c000.snappy.parquet.crc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/googleplaystore_cleaned/_SUCCESS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/googleplaystore_cleaned/part-00000-9af550dc-363e-437d-a716-8a5318bee065-c000.snappy.parquet" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/Part4.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Part4.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part1$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part1$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$$typecreator1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$$typecreator1$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$Application$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$Application$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part2$Application.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part3$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part3$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$$typecreator1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$$typecreator1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$$typecreator2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$$typecreator2$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Application$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Application$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Application.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Review$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Review$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Review.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/classes/Part4$Review.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +66,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Part2">
+  <component name="RunManager" selected="Application.Part5">
     <configuration name="Part1" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="Part1" />
       <module name="Spark_Challenge" />
@@ -91,13 +88,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Part3v2" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="Part3v2" />
-      <module name="Spark_Challenge" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Part4" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="Part4" />
       <module name="Spark_Challenge" />
@@ -105,13 +95,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Part5" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Part5" />
+      <module name="Spark_Challenge" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Part2" />
+        <item itemvalue="Application.Part5" />
         <item itemvalue="Application.Part4" />
+        <item itemvalue="Application.Part2" />
         <item itemvalue="Application.Part1" />
         <item itemvalue="Application.Part3" />
-        <item itemvalue="Application.Part3v2" />
       </list>
     </recent_temporary>
   </component>
